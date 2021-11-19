@@ -4,11 +4,14 @@
   "description": "This application manage nodes for fdapps ecosystem.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "folder-hash": "^4.0.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
   },
   "repository": {
     "type": "git",

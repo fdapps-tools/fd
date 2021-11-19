@@ -1,4 +1,5 @@
 const { hashElement } = require('folder-hash');
+const axios = require('axios');
 const fs = require('fs').promises;
 const PATH = './src/localDB'
 
@@ -152,10 +153,10 @@ class nodeManager {
     }
 
     // atualiza o arquivo de requests
-    await updateFile(requesteds, REQUEST_LIST_FILENAME)
+    await this.updateFile(requesteds, REQUEST_LIST_FILENAME)
 
     // atualiza o arquivo de nós
-    await updateFile(nodes, NODE_LIST_FILENAME)
+    await this.updateFile(nodes, NODE_LIST_FILENAME)
 
     // informa sobre as mudanças
     await this.broadcastFile('REQUEST_LIST_FILENAME')
@@ -241,7 +242,7 @@ class nodeManager {
 
   async receiveBroadCast(filename, data) {
     console.log('receiveBroadCast', filename, data)
-    updateFile(data, process.env[filename])
+    this.updateFile(data, process.env[filename])
   }
 
 }
