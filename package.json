@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "folder-hash": "^4.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fdapps-tools/node-manager.git"

@@ -1,49 +1,104 @@
-const { baseFolderHash } = require('../libs/hash')
-const { getFile, updateFile } = require('../libs/file')
-const nodeRequest = require('../libs/node-request')
+const { hashElement } = require('folder-hash');
+const fs = require('fs').promises;
+const PATH = './src/localDB'
 
 const NODE_LIST_FILENAME = process.env.NODE_LIST_FILENAME || 'node-list'
 const REQUEST_LIST_FILENAME = process.env.REQUEST_LIST_FILENAME || 'request-list'
 
 class nodeManager {
 
+  // @todo -> remove from this file
+  instance = () => {
+    return axios.create({
+      timeout: 5000,
+      headers: {
+        'Bypass-Tunnel-Reminder': 'true',
+        'Content-Type': 'application/json',
+        'hash-code': ''
+      }
+    })
+  }
+
+  // @todo -> remove from this file
+  post(url, data) {
+    return this.instance().post(url, data)
+  }
+
+  // @todo -> remove from this file
+  get(url, data) {
+    return this.instance().get(url, data)
+  }
+
+  // @todo -> remove from this file
+  async getFile(filename) {
+    let data = "[]"
+
+    try {
+      data = await fs.readFile(`${PATH}/${filename}.state`, 'utf8')
+
+    } catch (error) {
+      if (error.errno == "-2") {
+        await fs.writeFile(`${PATH}/${filename}.state`, "[]")
+      }
+    }
+
+    return JSON.parse(data)
+  }
+
+  // @todo -> remove from this file
+  async updateFile(data, filename) {
+    await fs.writeFile(`${PATH}/${filename}.state`, JSON.stringify(data))
+    return true
+  }
+
+  // @todo -> remove from this file
+  async baseFolderHash() {
+    const options = {
+      folders: { exclude: ['.*', 'node_modules', 'test_coverage', 'localDB'] },
+      files: { include: ['*.js', '*.json'] },
+    };
+
+    const { hash } = await hashElement('.', options)
+    return hash
+  }
+
   getNodeList() {
-    return getFile(NODE_LIST_FILENAME)
+    return this.getFile(NODE_LIST_FILENAME)
   }
 
   async insertNode(node) {
 
-    const nodes = await getFile(NODE_LIST_FILENAME) || []
+    const nodes = await this.getFile(NODE_LIST_FILENAME) || []
     nodes.push(node)
 
-    return updateFile(nodes, NODE_LIST_FILENAME)
+    return this.updateFile(nodes, NODE_LIST_FILENAME)
   }
 
   async joinRequest(request) {
     console.log(`Request to Join: ${request}`)
-    const requesteds = await getFile(REQUEST_LIST_FILENAME) || []
+    const requesteds = await this.getFile(REQUEST_LIST_FILENAME) || []
     requesteds.push(request)
-    updateFile(requesteds, REQUEST_LIST_FILENAME)
+    this.updateFile(requesteds, REQUEST_LIST_FILENAME)
   }
 
   // este método esta fazendo muita coisa, verificando qual esta ativo, atualizando o arquivo e ainda servido para trazer os atualizados em tempo real, isso precisa ser melhor, process.env.TUNNEL_URL)
   async checkNodesIsUp(filename = NODE_LIST_FILENAME) {
     console.log('synchronizing nodes')
     const lastcheck = Date.now()
-    const hosts = await getFile(filename)
+    const hosts = await this.getFile(filename)
 
     await Promise.allSettled(hosts.map(host => this.checkHostIsUp(host, lastcheck)))
 
     const onlineNodes = hosts.filter(host => host.lastcheck == lastcheck || host.host == process.env.TUNNEL_URL)
 
-    await updateFile(onlineNodes, filename)
+    await this.updateFile(onlineNodes, filename)
 
-    return getFile(filename)
+    return this.getFile(filename)
   }
 
   async checkHostIsUp(node, lastcheck = Date.now()) {
     return new Promise((resolve, reject) => {
-      nodeRequest.get(`${node.host}/stats`)
+      this.nodeRequest.get(`${node.host}/stats`)
         .then(response => {
           if (response.data.url === node.host) {
             node.lastcheck = lastcheck
@@ -113,7 +168,7 @@ class nodeManager {
   async setApprovalOrInapproval(host, validation) {
     // se o hash no host for igual ao do nó
     // @todo: talvez a verificação possa ser apenas do hash deste arquivo?
-    if (host.applicationHash === await baseFolderHash()) {
+    if (host.applicationHash === await this.baseFolderHash()) {
       console.log(`approving: ${host.host}`)
       if (host.approvations) {
         // evita que seja aprovado duas vezes
@@ -143,7 +198,7 @@ class nodeManager {
    */
   async initNode() {
 
-    const hash = await baseFolderHash()
+    const hash = await this.baseFolderHash()
 
     if (process.env.NETWORK_NODE_URL) {
       console.log(`trying join to network from ${process.env.NETWORK_NODE_URL} ...`)
@@ -151,7 +206,7 @@ class nodeManager {
       try {
 
         const node = { host: process.env.TUNNEL_URL, requested: Date.now(), applicationHash: hash }
-        const response = await nodeRequest.post(`${process.env.NETWORK_NODE_URL}/join-request`, node)
+        const response = await this.post(`${process.env.NETWORK_NODE_URL}/join-request`, node)
 
         console.log('network response: ', response.data)
 
@@ -171,14 +226,14 @@ class nodeManager {
 
   async broadcastFile(file_attr) {
     const filename = process.env[file_attr]
-    
+
     const nodes = await this.getNodeList()
-    const file = await getFile(filename)
+    const file = await this.getFile(filename)
 
     const promises = nodes.map(node => {
       console.log(`broadcasting to ${node.host} about ${file_attr}`)
       if (node.host !== process.env.TUNNEL_URL) {
-        return nodeRequest.post(`${node.host}/update-node-info`, { filename: file_attr, file })
+        return this.nodeRequest.post(`${node.host}/update-node-info`, { filename: file_attr, file })
       }
     })
     await Promise.allSettled(promises)
