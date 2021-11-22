@@ -8,6 +8,44 @@ const REQUEST_LIST_FILENAME = process.env.REQUEST_LIST_FILENAME || 'request-list
 
 class nodeManager {
 
+  // register stats routes
+  attachRoutes(expressRouter) {
+    expressRouter.get('/stats', (req, res, next) => res.send({ url: process.env.TUNNEL_URL }));
+
+    expressRouter.get('/nodes', async (req, res) => {
+
+      try {
+        const list = await this.getNodeList()
+        // sim, seria melhor em um middleware mas por enquanto só tem essa rota precisando de cors
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        return res.json(list)
+      } catch (error) {
+        console.log('ERROR', error)
+        return res.status(500).send({ error: 'Something failed!' })
+      }
+
+    })
+
+    expressRouter.post('/join-request', async (req, res) => {
+      try {
+        await this.joinRequest(req.body)
+        return res.json({ status: 'PENDING' })
+      }
+      catch (error) {
+        console.log('ERROR', error)
+        return res.status(500).send({ error: 'Something failed!' })
+      }
+    })
+
+    expressRouter.post('/update-node-info', (req, res) => {
+      console.log('post: updateNodeInfo')
+      const { filename, file } = req.body
+      this.receiveBroadCast(filename, file)
+      return res.json(true)
+    })
+
+  }
+
   // @todo -> remove from this file
   instance = () => {
     return axios.create({
