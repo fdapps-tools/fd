@@ -1,4 +1,4 @@
-# Node Manager
+# Node Manager - fdapps-tools
 
 This is main tool for fdapps ecosystem. With this package you can make your nodeJS application be a P2P application, fully descentralized.
 
