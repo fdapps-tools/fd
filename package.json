@@ -2,7 +2,7 @@
   "name": "node-manager",
   "version": "0.0.1",
   "description": "This application manage nodes for fdapps ecosystem.",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest"
   },

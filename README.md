@@ -12,6 +12,12 @@ For understand better this, can you see: [Backend - fdApps](https://github.com/f
 * Write a good readme for this;
 * Write jest tests;
 
+## Responsabilities
+
+* Storage Node Informations;
+* Communication between nodes;
+* Consensous algorithm;
+* Route Injection on backend application.
 
 ----
 ## OLD README - Need rewrite and translate

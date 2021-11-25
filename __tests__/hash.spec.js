@@ -1,8 +1,8 @@
 const { hashElement } = require('folder-hash');
-const nodeManager = require('../src')
+const { baseFolderHash } = require('../src/Hash');
 
 describe('libs/hash', () => {
-
+  
   it('ensure baseFolderHash return correct hash from backend root folder', async () => {
     const options = {
       folders: { exclude: ['.*', 'node_modules', 'test_coverage', 'localDB'] },
@@ -10,7 +10,7 @@ describe('libs/hash', () => {
     };
 
     const { hash } = await hashElement('.', options)
-    const hashFromLib = await nodeManager.baseFolderHash()
+    const hashFromLib = await baseFolderHash()
 
     expect(hash).toEqual(hashFromLib)
   });

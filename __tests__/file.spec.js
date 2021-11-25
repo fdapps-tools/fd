@@ -1,5 +1,6 @@
-const nodeManager = require('../src')
+const { updateFile, getFile } = require('../src/Storage');
 const FILENAME = 'test-file'
+
 let dataTest = []
 
 describe('libs/files', () => {
@@ -11,12 +12,13 @@ describe('libs/files', () => {
       "lastcheck": 2212354897461
     }]
 
-    const file = await nodeManager.updateFile(dataTest, FILENAME)
+    const file = await updateFile(dataTest, FILENAME)
     expect(file).toEqual(true)
   });
 
   it('ensure is possible get one local file localDB/*.state by name', async () => {
-    const file = await nodeManager.getFile(FILENAME)
+
+    const file = await getFile(FILENAME)
     expect(file).toEqual(expect.arrayContaining(dataTest));
   });
 
