@@ -4,7 +4,7 @@
   "description": "This application manage nodes for fdapps ecosystem.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --collectCoverage"
   },
   "dependencies": {
     "axios": "^0.21.1",

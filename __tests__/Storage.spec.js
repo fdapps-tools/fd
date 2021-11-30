@@ -3,7 +3,7 @@ const FILENAME = 'test-file'
 
 let dataTest = []
 
-describe('libs/files', () => {
+describe('src/Storage', () => {
 
   it('ensure is possible update or create one local file localDB/*.state by name and json data', async () => {
     dataTest = [{

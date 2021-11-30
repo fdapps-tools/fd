@@ -1,6 +1,6 @@
 const { instance } = require('../src/Network')
 
-describe('libs/node-request', () => {
+describe('src/Network', () => {
 
   it('ensure node-request instance has bypass custom header', async () => {
     const { headers } = instance().defaults

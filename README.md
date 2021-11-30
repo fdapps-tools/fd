@@ -7,10 +7,10 @@ Has many work for improve and organize this package, for now it is really messy 
 For understand better this, can you see: [Backend - fdApps](https://github.com/fdapps-tools/backend)
 # TODO
 
+* Improve tests coverage;
 * Organize files and directories structures;
 * Make clear tasks needed in each method;
 * Write a good readme for this;
-* Write jest tests;
 
 ## Responsabilities
 
