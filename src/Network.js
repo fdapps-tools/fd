@@ -4,6 +4,17 @@ const NODE_LIST_FILENAME = process.env.NODE_LIST_FILENAME || 'node-list'
 const axios = require('axios');
 const { getFile, updateFile } = require('./Storage');
 
+const instance = () => {
+  return axios.create({
+    timeout: 5000,
+    headers: {
+      'Bypass-Tunnel-Reminder': 'true',
+      'Content-Type': 'application/json',
+      'hash-code': ''
+    }
+  })
+}
+
 module.exports = {
 
   /**
@@ -57,17 +68,6 @@ module.exports = {
   receiveBroadCast: async (filename, data) => {
     console.log('receiveBroadCast', filename, data)
     updateFile(data, process.env[filename])
-  },
-
-  instance: () => {
-    return axios.create({
-      timeout: 5000,
-      headers: {
-        'Bypass-Tunnel-Reminder': 'true',
-        'Content-Type': 'application/json',
-        'hash-code': ''
-      }
-    })
   },
 
   post(url, data) {
