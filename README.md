@@ -1,107 +1,57 @@
 # Fully Distributed Application toolkit
 
-This is main tool for fdapps ecosystem. With this package you can make your nodeJS application be a P2P application, fully descentralized.
+Warning - This is a proof of concept project, is not can be usage yet! 👨‍💻 👨‍💻
+----
+The project goal is allow full projects run in own network nodes as P2P application on easy mode, (like framework) to make your fully decentralized modern application as peer to peer (without center server needed)
 
-Has many work for improve and organize this package, for now it is really messy but works.
+My main tech motivation is improving myself 🧠 about decentralization concepts and limitations, and can to use my other knowledges, like networks, linux and development skills.
 
-For understand better this, can you see: [Backend - fdApps](https://github.com/fdapps-tools/backend)
+I want any developer can be insert this tools on your application and done! Your application can be decentralized.
+
+Has some limitations about this goal, I understand. But I'm solving this with alternatives and doing documentation for improving each part. Is probably that on the future, our limitations on the network there are smaller, I'll learn more and who know any genius guy can be help us.
+
+For see a complete sample about how to it`s work on express application, can you see: [Backend-demo - fdApps](https://github.com/fdapps-tools/backend-demo)
+## Package features
+
+* [Tunneling](docs/Tunneling.md) to delivery application P2P;
+* [Storage](docs/Storage.md) Node Informations;
+* Communication between nodes;
+* [Consensous algorithm](docs/NodeManager.md);
+
+# Premises
+
+  - Application fully run on *P2P enviroment* - Offile just if last Node to down;
+  - It must be possible that any *modern frontend* (VueJS, React, Angular, etc) can be delivery;
+  - The components are modularized, as tools for easy maintable and not language blocked;
+  - Need *automatized tests* for all;
+  - Remove all that's possible about centralized resources;
 # TODO
 
 * Improve tests coverage;
-* Organize files and directories structures;
-* Make clear tasks needed in each method;
 * Write a good readme for this;
+* Improve consensous;
+* Improve tunneling;
+* Improve all
 
-## Responsabilities
+# How to contribute
+If you fell here out of nowhere but liked something you've read, I'm counting on your help for the project to grow, after all, despite starting from me, it's not for me, but for everyone.
 
-* Storage Node Informations;
-* Communication between nodes;
-* Consensous algorithm;
-* Route Injection on backend application.
-* Tunnel -> Old Tunnel Repo
+There are many ways to contribute, because everything we have is here and there is little, documentation, design, tests, ideas, dissemination... Everything is important.
 
-# Tunneling
+Even your questioning about how it works will help me to be even more clear on my goals, as well as your extra ideas on how to make the project better, so feel free to contribute as you like.
 
-Warning: Do not use this pack in production projects! This package is under construction to serve the fdapps ecosystem (which is also under construction).
+# Video log - Portuguese 🇧🇷 only
 
-The purpose of this repository is to abstract the creation of a tunnel for the ecosystem.
+* [O que é o projeto](https://youtu.be/-lsOf4jt0uU)
+* [Organização em módulos](https://youtu.be/MfGx5LEpkV4)
 
-Initially we are using 'localtunnel' to create the tunnel. This allows us to create access to a local application in a simple and practical way.
+## Histórico de vídeos (qualidade inferior)
 
-We will need to create a resource that is not tied to any external server as it is today, as our project consists of a completely P2P ecosystem.
-
-I intend to program this package in Rust, however it will have to be consumed by the main application written in NodeJs.
-
-There are some technical challenges regarding this package, the main one is the creation of a direct P2P tunnel, for this it is necessary to study some network concepts as we will need to drill an existing connection to create the socket between two residential hosts.
-
-The main project is complex, I'm separating some responsibilities into smaller packages (like this one) but the basic principle is the functionality of the ecosystem as a whole, so this package can change according to the needs of the ecosystem.
-
-## TODO TUNNEL
-
-1. Explain about how to works actually 
-2. Write documentation about limitations with localtunnel and to remove complexity
-
-
-### OLD TUNNEL README 
-
-Isso foi um desafio no primeiro momento, vou descrever o que compreendi até o momento, posso estar errado mas resolvi temporariamente.
-
-Quando batemos em uma porta de IP publico de um provedor de internet, o roteador não possui rotas para saber para ondem redirecionar o acesso, além de possuir portas fechadas.
-
-Não quero incluir a complexidade do usuário ter que fazer configuração em seu equipamento, a solução que encontrei foi com tuneis. Pelo que entendi, o serviço mantém uma conexão como uma VPN com um servidor que faz o proxy do acesso direto pra ele. Isso parece resolver, mas coloca um ponto crítico que é ter a necessidade desse servidor fazer o proxy, tirando parte da descentralização completa, que é meu objetivo.
-
-Uma alternativa funcional por hora, é utilizar um desses serviços (ngrok, localtunnel, etc) de forma escalada, ou seja, ter um conjunto de possibilidades e alternar entre elas.
-
-No momento isso está sendo feito com o localtunnel apenas e funciona, pretendo melhorar essa implementação e modelar para que fique flexível alternar.
-
-De certa forma isso esta 'resolvendo' o DNS também, mas é importante retomar o tópico de DNS no futuro.
-----
-## OLD README - Need rewrite and translate
-### The data State
-
-Remover do gist fez eu perceber que cada nó precisa de uma cópia dos dados da rede, como um estado global.
-Por agora, estou guardando jsons no diretório localDB e farei um esquema de broadcast para que todos mantenham-se iguais.
-Acredito que isso vá elovuir para uma classe mais completa e posso aproveitar conhecimentos da arquitetura flux de frontend.
-Uma classe responsável por entregar os dados do estado global, inserir, remover e atualizar. De forma abstraida para que a mudança de arquivos texto para algum banco de dados sejam menos dolorosa no futuro.
-
-E o detalhe é que só estamos falando do estado da rede em sí, da consistência e confiança dos nós, nada sobre os dados descentralizados para a aplicação de fato.
-
-### Concenso distribuido e garantia entre nós
-
-Como garantir que os nós sejam confiáveis entre sí?
-
-Não estou pensando nos dados ainda, apenas na distribuição da aplicação. O que fará um novo nó ser confiável perante a rede?
-Pensando nisso, por que não armazenar às informações de nós localmente em cada nó e, a cada mudança, haja um broadcast para que todos tenham os dados dentro de sí mesmo?
-
-Estou considerando fazer algo neste sentido:
-
-Primeiro nó possui apenas sí próprio na rede.
-Quando outro host quiser se tornar um nó, ele vai enviar um pedido de subscrição para o primeiro nó (N1).
-N1 recebe o pedido de subscrição assinado com a chave publica do futuro N2 e um hash do seu código atual.
-Após a validação (que na próxima vez não pode depender somente do N1), o N1 enviará ao N2 que tudo bem, ele pode ser um nó.
-N1 também fará um broadcast para todos com a atualição do novo nó, pois ele é um nó confiável e pode fazer isso.
-
-Somente um nó já validado poderá fazer o broadcast. Broadcast este conterá o registro de aceites dos demais % da rede.
-
-Quando um novo host que vier do código fonte original e não de um nó, quiser entrar para uma rede? Basta ele inicializar-se com o link de algum nó valido. Inclusive isso permitirá até manter um unico nó com um IP fixo para que a rede sempre possa ser reconstituida caso os nós livres saiam.
-
-Esta bem modelado na minha cabeça, parece ser possível com as informações atuais que tenho mas ainda preciso aprender mais para poder simplificar o processo.
-
-Seria legal ter algum esquema de filas tipo zeroMQ, sqs, redis para esse processamento do concenso.
-
-
-Caso 1: Primeiro nó da rede, não há outro para se referenciar. Começa do zero, se auto define como nó.
-Caso 2: Há rede para referenciar definida no ambiente como `NETWORK_NODE_URL`, começa o processo de pedido para ser nó.
-
-* Faz uma requisição para o nó informado;
-* Nó inclui a requisição em uma lista para ser validado;
-* Cron do nó atribui sua verificação no nó;
-* Nó faz broadcast com outros nós para ter mais aprovações;
-* Último nó a aprovar, inclui o novo host como nó e informa para os outros.
-
-### Node updates
-
-Caso seja necessário lançar um bugfix na rede ou alguma nova versão, como isso aconteceria?
-### Processamento remunerado
-
-É importante pensar nisso mas ainda não sei como um nó pode ter remuneração para manter-se um nó. 
+* 03/08/2021: [Vídeo Introdutório ](https://youtu.be/qupPVPxfx34)
+* 11/08/2021: [LocalTunnel no Node ](https://youtu.be/8i_8c3OMiSU)
+* 12/08/2021: [Join e Lista de Nós ](https://youtu.be/maxyYvEmpqQ)
+* 12/08/2021: [Up com Docker ](https://youtu.be/kbGJeM2LErU)
+* 13/08/2021: [Join do nó e reflexões sobre a arquitetura do core ](https://youtu.be/f_Uc025QrHc)
+* 16/08/2021: [Remoção do gist, sync do Join e reflexões sobre concenso ](https://www.youtube.com/watch?v=H25itj5PEYU)
+* 18/08/2021: [Organizando libs ](https://www.youtube.com/watch?v=eMCw0at0txc)
+* 23/08/2021: [Video sem Descrição](https://www.youtube.com/watch?v=OlcZiBX3NIQ)
