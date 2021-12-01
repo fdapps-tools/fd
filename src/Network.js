@@ -16,6 +16,18 @@ const instance = () => {
   })
 }
 
+const joinRequest = async (request) => {
+  console.log(`Request to Join: ${request}`)
+  const requesteds = await getFile(REQUEST_LIST_FILENAME) || []
+  requesteds.push(request)
+  updateFile(requesteds, REQUEST_LIST_FILENAME)
+}
+
+const receiveBroadCast = async (filename, data) => {
+  console.log('receiveBroadCast', filename, data)
+  updateFile(data, process.env[filename])
+}
+
 module.exports = {
 
   /**
@@ -26,10 +38,10 @@ module.exports = {
   attachRoutes(router) {
 
     // support just express route instance for now
-    if(!Object.getPrototypeOf(router) == express.Router) {
+    if (!Object.getPrototypeOf(router) == express.Router) {
       return console.error('log', 'attachRoutes: router is not express.Router')
     }
-    
+
     router.get('/stats', (req, res, next) => res.send({ url: process.env.TUNNEL_URL }));
 
     router.get('/nodes', async (req, res) => {
@@ -63,18 +75,6 @@ module.exports = {
       return res.json(true)
     })
 
-  },
-
-  joinRequest: async (request) => {
-    console.log(`Request to Join: ${request}`)
-    const requesteds = await getFile(REQUEST_LIST_FILENAME) || []
-    requesteds.push(request)
-    updateFile(requesteds, REQUEST_LIST_FILENAME)
-  },
-
-  receiveBroadCast: async (filename, data) => {
-    console.log('receiveBroadCast', filename, data)
-    updateFile(data, process.env[filename])
   },
 
   post(url, data) {
