@@ -18,7 +18,43 @@ For understand better this, can you see: [Backend - fdApps](https://github.com/f
 * Communication between nodes;
 * Consensous algorithm;
 * Route Injection on backend application.
+* Tunnel -> Old Tunnel Repo
 
+# Tunneling
+
+Warning: Do not use this pack in production projects! This package is under construction to serve the fdapps ecosystem (which is also under construction).
+
+The purpose of this repository is to abstract the creation of a tunnel for the ecosystem.
+
+Initially we are using 'localtunnel' to create the tunnel. This allows us to create access to a local application in a simple and practical way.
+
+We will need to create a resource that is not tied to any external server as it is today, as our project consists of a completely P2P ecosystem.
+
+I intend to program this package in Rust, however it will have to be consumed by the main application written in NodeJs.
+
+There are some technical challenges regarding this package, the main one is the creation of a direct P2P tunnel, for this it is necessary to study some network concepts as we will need to drill an existing connection to create the socket between two residential hosts.
+
+The main project is complex, I'm separating some responsibilities into smaller packages (like this one) but the basic principle is the functionality of the ecosystem as a whole, so this package can change according to the needs of the ecosystem.
+
+## TODO TUNNEL
+
+1. Explain about how to works actually 
+2. Write documentation about limitations with localtunnel and to remove complexity
+
+
+### OLD TUNNEL README 
+
+Isso foi um desafio no primeiro momento, vou descrever o que compreendi até o momento, posso estar errado mas resolvi temporariamente.
+
+Quando batemos em uma porta de IP publico de um provedor de internet, o roteador não possui rotas para saber para ondem redirecionar o acesso, além de possuir portas fechadas.
+
+Não quero incluir a complexidade do usuário ter que fazer configuração em seu equipamento, a solução que encontrei foi com tuneis. Pelo que entendi, o serviço mantém uma conexão como uma VPN com um servidor que faz o proxy do acesso direto pra ele. Isso parece resolver, mas coloca um ponto crítico que é ter a necessidade desse servidor fazer o proxy, tirando parte da descentralização completa, que é meu objetivo.
+
+Uma alternativa funcional por hora, é utilizar um desses serviços (ngrok, localtunnel, etc) de forma escalada, ou seja, ter um conjunto de possibilidades e alternar entre elas.
+
+No momento isso está sendo feito com o localtunnel apenas e funciona, pretendo melhorar essa implementação e modelar para que fique flexível alternar.
+
+De certa forma isso esta 'resolvendo' o DNS também, mas é importante retomar o tópico de DNS no futuro.
 ----
 ## OLD README - Need rewrite and translate
 ### The data State
