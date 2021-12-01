@@ -3,6 +3,7 @@ const NODE_LIST_FILENAME = process.env.NODE_LIST_FILENAME || 'node-list'
 
 const axios = require('axios');
 const { getFile, updateFile } = require('./Storage');
+const express = require('express');
 
 const instance = () => {
   return axios.create({
@@ -22,10 +23,16 @@ module.exports = {
    * @todo: think if is good idea keep routes injection in this file
    * @todo: prepare for multiple routers engine
    */
-  attachRoutes(expressRouter) {
-    expressRouter.get('/stats', (req, res, next) => res.send({ url: process.env.TUNNEL_URL }));
+  attachRoutes(router) {
 
-    expressRouter.get('/nodes', async (req, res) => {
+    // support just express route instance for now
+    if(!Object.getPrototypeOf(router) == express.Router) {
+      return console.error('log', 'attachRoutes: router is not express.Router')
+    }
+    
+    router.get('/stats', (req, res, next) => res.send({ url: process.env.TUNNEL_URL }));
+
+    router.get('/nodes', async (req, res) => {
 
       try {
         const list = await getFile(NODE_LIST_FILENAME)
@@ -38,7 +45,7 @@ module.exports = {
 
     })
 
-    expressRouter.post('/join-request', async (req, res) => {
+    router.post('/join-request', async (req, res) => {
       try {
         await joinRequest(req.body)
         return res.json({ status: 'PENDING' })
@@ -49,7 +56,7 @@ module.exports = {
       }
     })
 
-    expressRouter.post('/update-node-info', (req, res) => {
+    router.post('/update-node-info', (req, res) => {
       console.log('post: updateNodeInfo')
       const { filename, file } = req.body
       receiveBroadCast(filename, file)
