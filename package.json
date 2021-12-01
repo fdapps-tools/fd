@@ -1,5 +1,5 @@
 {
-  "name": "node-manager",
+  "name": "fd",
   "version": "0.0.2",
   "description": "This application manage nodes for fdapps ecosystem.",
   "main": "index.js",
@@ -17,16 +17,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fdapps-tools/node-manager.git"
+    "url": "git+https://github.com/fdapps-tools/fd.git"
   },
   "keywords": [
-    "node-manager",
+    "fd",
     "fdapps-tools"
   ],
   "author": "David Silva <srdavidsilva@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fdapps-tools/node-manager/issues"
+    "url": "https://github.com/fdapps-tools/fd/issues"
   },
-  "homepage": "https://github.com/fdapps-tools/node-manager#readme"
+  "homepage": "https://github.com/fdapps-tools/fd#readme"
 }
