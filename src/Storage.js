@@ -10,9 +10,7 @@ module.exports = {
       data = await fs.readFile(`${PATH}/${filename}.state`, 'utf8')
 
     } catch (error) {
-      if (error.errno == "-2") {
-        await fs.writeFile(`${PATH}/${filename}.state`, "[]")
-      }
+      return []
     }
 
     return JSON.parse(data)
